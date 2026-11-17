@@ -7,7 +7,7 @@ This is NOT the Next.js you know: Next 16 has breaking changes. Read the relevan
 
 - **Never show a brand name** on the public page: not in titles, links or file names. The server
   refuses titles containing a client's name (`findBrandInTitle`).
-- **No counts** of reels, brands or categories on the public page. The first chip is "Featured".
+- **No counts** of reels, brands or categories on the public page. The first chip is "All": one grid, every reel once.
 - **No download, share, copy-link or contact buttons** on the public page.
 - The intro is the eyebrow "Made with CreativeOS" and the heading only; no line claiming which steps happen in CreativeOS.
 

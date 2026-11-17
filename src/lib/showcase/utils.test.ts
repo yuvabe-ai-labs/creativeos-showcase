@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  featuredSections,
+  firstCategorySections,
   findBrandInTitle,
   reelsInCategory,
   formatReelDuration,
@@ -87,7 +87,7 @@ describe("isShowcasePathForReel", () => {
   });
 });
 
-describe("reelsInCategory / featuredSections", () => {
+describe("reelsInCategory / firstCategorySections", () => {
   const cats = [{ id: "food" }, { id: "founder" }, { id: "pets" }];
   const reels = [
     { id: "r1", placements: [{ categoryId: "founder", sortOrder: 10 }, { categoryId: "food", sortOrder: 20 }] },
@@ -100,7 +100,7 @@ describe("reelsInCategory / featuredSections", () => {
     expect(reelsInCategory(reels, "pets")).toEqual([]);
   });
   it("shows each reel once, under its first category in page order", () => {
-    const sections = featuredSections(cats, reels);
+    const sections = firstCategorySections(cats, reels);
     expect(sections.map((s) => [s.category.id, s.reels.map((r) => r.id)])).toEqual([
       ["food", ["r2", "r1"]],
       ["founder", ["r3"]],

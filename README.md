@@ -3,7 +3,7 @@
 A public page of sample reels for prospects, plus an admin where showcase admins add reels and
 manage categories.
 
-- `/`: the public page. No sign-in. Reels grouped by category ("Featured" shows them all);
+- `/`: the public page. No sign-in. "All" shows every reel in one grid; category chips filter;
   `/?category=<slug>` opens on one category.
 - `/admin`: sign in with a CreativeOS super-admin account. Upload an MP4, give it a title,
   category and cover, and switch it on.

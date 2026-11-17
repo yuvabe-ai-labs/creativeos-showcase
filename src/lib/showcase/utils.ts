@@ -89,11 +89,11 @@ export function reelsInCategory<T extends Placed>(reels: readonly T[], categoryI
 }
 
 /**
- * "Featured" shows every reel once, under the first of its categories in page order, so a reel
- * in Founder-led and Food & beverage isn't shown twice. Returns sections in category order,
- * empty ones dropped.
+ * Every reel once, grouped under the first of its categories in page order, so a reel in
+ * Founder-led and Food & beverage isn't shown twice. "All" flattens these, which keeps similar
+ * work together. Returns sections in category order, empty ones dropped.
  */
-export function featuredSections<C extends { id: string }, T extends Placed>(
+export function firstCategorySections<C extends { id: string }, T extends Placed>(
   categories: readonly C[],
   reels: readonly T[],
 ): { category: C; reels: T[] }[] {

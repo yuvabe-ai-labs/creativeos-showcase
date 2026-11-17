@@ -3,15 +3,15 @@
 import { useCallback, useMemo, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { PublicShowcaseReel, ShowcaseCategory } from "@/lib/showcase/types";
-import { featuredSections, reelsInCategory } from "@/lib/showcase/utils";
+import { firstCategorySections, reelsInCategory } from "@/lib/showcase/utils";
 import { ShowcaseReelCard } from "./showcase-reel-card";
 import { ShowcasePlayer } from "./showcase-player";
 import { useStuck } from "./use-stuck";
 
-const FEATURED = "featured";
+const ALL = "all";
 
-// The public gallery: "Featured" (every reel once, under its first category) or one category
-// (every reel in it), chosen by chip. A reel can be in several categories (D504).
+// The public gallery: "All" (one grid, every reel once) or one category (every reel in it),
+// chosen by chip. A reel can be in several categories (D504).
 // The chosen category goes in the address (?category=<slug>) so sales can send a link that
 // opens on, say, Food & beverage. No counts anywhere (D504): they would read as "this is all
 // we have done".
@@ -32,21 +32,26 @@ export function ShowcaseGallery({
         .filter((g) => g.reels.length > 0),
     [categories, reels],
   );
-  const featured = useMemo(() => featuredSections(categories, reels), [categories, reels]);
+  // "All": every reel once, ordered by its first category so similar work sits together.
+  const sections = useMemo(() => firstCategorySections(categories, reels), [categories, reels]);
+  const all = useMemo(() => sections.flatMap((s) => s.reels), [sections]);
   const [filter, setFilter] = useState<string>(
-    groups.some((g) => g.category.slug === initialCategory) ? initialCategory! : FEATURED,
+    groups.some((g) => g.category.slug === initialCategory) ? initialCategory! : ALL,
   );
   const [openId, setOpenId] = useState<string | null>(null);
   const { sentinel, stuck } = useStuck();
 
-  const shown = filter === FEATURED ? featured : groups.filter((g) => g.category.slug === filter);
+  const shown = useMemo<{ category: ShowcaseCategory | null; reels: PublicShowcaseReel[] }[]>(
+    () => (filter === ALL ? [{ category: null, reels: all }] : groups.filter((g) => g.category.slug === filter)),
+    [filter, all, groups],
+  );
   // Next/previous walk the reels in the order they are on screen.
   const order = useMemo(() => shown.flatMap((g) => g.reels), [shown]);
   const openReel = order.find((r) => r.id === openId) ?? null;
 
   const choose = (value: string) => {
     setFilter(value);
-    const url = value === FEATURED ? window.location.pathname : `?category=${value}`;
+    const url = value === ALL ? window.location.pathname : `?category=${value}`;
     window.history.replaceState(null, "", url);
   };
   const step = useCallback(
@@ -79,7 +84,7 @@ export function ShowcaseGallery({
             aria-label="Filter by category"
             className="w-max"
           >
-            {[{ value: FEATURED, label: "Featured" }, ...groups.map((g) => ({ value: g.category.slug, label: g.category.name }))].map(
+            {[{ value: ALL, label: "All" }, ...groups.map((g) => ({ value: g.category.slug, label: g.category.name }))].map(
               (chip) => (
                 <ToggleGroupItem
                   key={chip.value}
@@ -97,9 +102,13 @@ export function ShowcaseGallery({
 
       <div className="space-y-12">
         {shown.map((g) => (
-          <section key={g.category.id} className="animate-rise pt-8">
-            <h2 className="font-display text-xl font-semibold tracking-tight">{g.category.name}</h2>
-            {g.category.description && <p className="mt-1 text-sm text-muted-foreground">{g.category.description}</p>}
+          <section key={g.category?.id ?? ALL} className="animate-rise pt-8">
+            {g.category && (
+              <>
+                <h2 className="font-display text-xl font-semibold tracking-tight">{g.category.name}</h2>
+                {g.category.description && <p className="mt-1 text-sm text-muted-foreground">{g.category.description}</p>}
+              </>
+            )}
             <div className="mt-5 grid grid-cols-2 gap-x-3.5 gap-y-7 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 xl:grid-cols-5">
               {g.reels.map((r) => (
                 <ShowcaseReelCard key={r.id} reel={r} onOpen={() => setOpenId(r.id)} />
@@ -111,7 +120,10 @@ export function ShowcaseGallery({
 
       <ShowcasePlayer
         reel={openReel}
-        categoryName={shown.find((g) => g.reels.some((r) => r.id === openReel?.id))?.category.name}
+        // In a category, that category; in "All", the reel's first category.
+        categoryName={
+          (shown[0]?.category ?? sections.find((s) => s.reels.some((r) => r.id === openReel?.id))?.category)?.name
+        }
         onClose={() => setOpenId(null)}
         onStep={step}
       />
