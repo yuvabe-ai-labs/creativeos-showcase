@@ -24,7 +24,7 @@ const gilroy = localFont({
 
 export const metadata: Metadata = {
   title: "Our work · Yuvabe Studios",
-  description: "A selection of reels made by Yuvabe Studios with CreativeOS.",
+  description: "See what Yuvabe Studios can make for you: reels made with CreativeOS.",
   // Some reels are not yet published by the brands themselves.
   robots: { index: false, follow: false },
 };

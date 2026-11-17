@@ -9,7 +9,7 @@ This is NOT the Next.js you know: Next 16 has breaking changes. Read the relevan
   refuses titles containing a client's name (`findBrandInTitle`).
 - **No counts** of reels, brands or categories on the public page. The first chip is "Featured".
 - **No download, share, copy-link or contact buttons** on the public page.
-- The intro credits CreativeOS ("made by our team with CreativeOS") without claiming each step.
+- The intro is the eyebrow "Made with CreativeOS" and the heading only; no line claiming which steps happen in CreativeOS.
 
 ## Design
 

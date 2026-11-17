@@ -17,15 +17,11 @@ export function ShowcaseShell({ children }: { children: React.ReactNode }) {
           />
         </header>
 
-        <div className="mt-10 max-w-2xl sm:mt-14">
+        <div className="mt-10 max-w-4xl sm:mt-14">
           <p className="text-eyebrow text-muted-foreground">Made with CreativeOS</p>
-          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-            A selection of reels we&apos;ve made
+          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+            See what we can make for you
           </h1>
-          <p className="mt-4 text-muted-foreground">
-            Every reel here was made by our team with CreativeOS, our AI production studio. Tap any
-            reel to watch it with sound.
-          </p>
         </div>
 
         <div className="mt-6">{children}</div>
