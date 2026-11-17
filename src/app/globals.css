@@ -1,0 +1,660 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-gilroy);
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-heading: var(--font-clash);
+  --font-display: var(--font-clash);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
+  --color-gen-ready: var(--gen-ready);
+  --color-gen-failed: var(--gen-failed);
+  --color-gen-running: var(--gen-running);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-text: var(--warning-text);
+  --color-client: var(--client);
+  --color-client-text: var(--client-text);
+  --color-scrim: var(--scrim);
+  --color-on-scrim: var(--on-scrim);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-text: var(--info-text);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.9);
+  --radius-3xl: calc(var(--radius) * 2.4);
+  --radius-4xl: calc(var(--radius) * 2.8);
+
+  /* Elevation scale — soft, high, blue-black-tinted (Yuvabe).
+     Each generates a shadow-* utility. Two-layer = contact + ambient.
+     Ambient offsets/blur run at HALF the original Yuvabe export — the full-size
+     halos made every surface read as a floating panel. Contact layers stay 1px. */
+  --shadow-xs: 0 1px 2px rgba(11, 15, 25, 0.06);
+  --shadow-sm: 0 1px 2px rgba(11, 15, 25, 0.06), 0 1px 4px rgba(11, 15, 25, 0.05);
+  --shadow-card: 0 1px 2px rgba(11, 15, 25, 0.08), 0 6px 14px rgba(11, 15, 25, 0.1);
+  --shadow-md: 0 1px 3px rgba(11, 15, 25, 0.06), 0 4px 10px rgba(11, 15, 25, 0.1);
+  --shadow-lg: 0 4px 8px rgba(11, 15, 25, 0.08), 0 10px 20px rgba(11, 15, 25, 0.14);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Yuvabe Studios design system (ref/Yuvabe Studios Design System).
+   "Light editorial premium." Purple is the SINGLE brand color, used
+   sparingly (CTA, brand mark). Neutrals do the heavy lifting. Two
+   families only: Clash Display (headings) + Gilroy (body).
+   Yuvabe tokens are mapped onto the shadcn variable names below so every
+   component inherits the brand automatically.
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  /* Brand primitives */
+  --purple-500: #5829c7;
+  --purple-hover: #4c24ab;
+  --yellow-500: #ffca2d;
+  --lavender-500: #9688c0;
+  --lavender-200: #cbc3df;
+  --cyan-500: #2bb7c7;
+  --green-500: #90c645;
+  --red-orange-500: #f04e28;
+
+  /* Status 700s — the same hues darkened until they clear WCAG 4.5:1 on a white
+     card, because the 500s cannot serve as ink on light surfaces: green-500
+     measures 2.03:1 there, yellow-500 1.53, cyan-500 2.41 (the floor is 3.0 for
+     icons, 4.5 for text). Hue and saturation are preserved, only lightness moves,
+     so a 700 still reads as the same colour as its 500. */
+  --green-700: #577f1f; /* 4.71:1 on white */
+  --yellow-700: #957004; /* 4.57:1 */
+  --cyan-700: #15828e; /* 4.55:1 */
+  --red-orange-700: #e0330a; /* 4.52:1 */
+
+  /* Generation-status glyph hues (D142). Picked from the Generation Tray design
+     comp rather than derived from the palette above, so they are DELIBERATELY
+     brighter than the 700s and do not clear the 3.0:1 icon floor on white:
+     green 2.70:1, red 3.96:1, yellow 1.45:1. Accepted because status here is
+     never carried by colour alone — each state has a distinct glyph shape and
+     the status word is on the row's title/aria-label. Scoped to the tray's
+     status glyphs on purpose: the semantic --success/--warning/--destructive
+     families still drive approval badges and everything else, and are unchanged. */
+  --gen-ready: #0fea81;
+  --gen-failed: #fc171b;
+  --gen-running: #ffd230;
+
+  /* Neutrals */
+  --neutral-0: #ffffff;
+  --neutral-25: #fcfcfd;
+  --neutral-50: #f8f8fa;
+  --neutral-100: #f1f2f4;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-500: #6b7280;
+  --neutral-700: #374151;
+  --neutral-900: #111827;
+
+  /* Elevation (tinted blue-black, 3-step) — halved with the @theme scale above */
+  --shadow-sm: 0 1px 2px rgba(11, 15, 25, 0.06);
+  --shadow-md: 0 4px 10px rgba(11, 15, 25, 0.06);
+  --shadow-lg: 0 8px 16px rgba(11, 15, 25, 0.12);
+
+  /* Sideways elevation for the focus views' action column — the panel the
+     operator actually works in. Throws BOTH ways: a one-sided cast made the
+     column look shunted against the rail rather than lifted off the page, so
+     the pair is what actually reads as elevation. No vertical component — the
+     column runs the full height, so a downward cast would have nothing to
+     fall on. */
+  --shadow-panel:
+    6px 0 12px -8px rgba(11, 15, 25, 0.14),
+    -6px 0 12px -8px rgba(11, 15, 25, 0.14);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 200ms;
+  --duration-base: 320ms;
+  --duration-slow: 500ms;
+
+  /* shadcn semantic tokens → Yuvabe palette */
+  --background: var(--neutral-25);
+  --foreground: var(--neutral-900);
+  --card: var(--neutral-0);
+  --card-foreground: var(--neutral-900);
+  --popover: var(--neutral-0);
+  --popover-foreground: var(--neutral-900);
+  --primary: var(--purple-500);
+  --primary-foreground: var(--neutral-0);
+  --secondary: var(--neutral-100);
+  --secondary-foreground: var(--neutral-900);
+  --muted: var(--neutral-50);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--neutral-100);
+  --accent-foreground: var(--neutral-900);
+  --destructive: var(--red-orange-500);
+
+  /* Status family. Three tokens per status, because one cannot cover both uses:
+       --x            the fill / solid surface
+       --x-foreground ink ON that fill  (always the dark neutral — white on
+                      green-500 is 2.03:1, on yellow-500 1.53:1)
+       --x-text       ink on a LIGHT surface (the 700 step)
+     Uses hues already in the Yuvabe palette, which until now only fed the chart
+     scale — no new colour is introduced, they are simply given a semantic job.
+     Purple stays the brand colour; these carry state, never decoration. */
+  --success: var(--green-500);
+  --success-foreground: var(--neutral-900); /* 8.74:1 */
+  --success-text: var(--green-700);
+  --warning: var(--yellow-500);
+  --warning-foreground: var(--neutral-900); /* 11.61:1 */
+  --warning-text: var(--yellow-700);
+  /* D310: the Client review node's own accent — the one sanctioned non-purple node colour,
+     so client-facing work reads apart from generation nodes. Fill/border use the brand
+     yellow; text and icons use yellow-700 (4.57:1), never yellow-500 (1.53:1). */
+  --client: var(--yellow-500);
+  --client-text: var(--yellow-700);
+  /* Text over imagery (a storyboard tile's shot line): white on a dark scrim in both themes, so it
+     reads over a white sketch, the brightest frame. Defined once here; .dark does not flip it. */
+  --scrim: var(--neutral-900);
+  --on-scrim: var(--neutral-0);
+  --info: var(--cyan-500);
+  --info-foreground: var(--neutral-900); /* 7.35:1 */
+  --info-text: var(--cyan-700);
+  --destructive-foreground: var(--neutral-0);
+  --destructive-text: var(--red-orange-700);
+
+  --border: var(--neutral-200);
+  --input: var(--neutral-200);
+  --ring: var(--purple-500);
+  --chart-1: var(--purple-500);
+  --chart-2: var(--yellow-500);
+  --chart-3: var(--lavender-500);
+  --chart-4: var(--cyan-500);
+  --chart-5: var(--green-500);
+  /* Halved from the original 0.75rem — every rounded-* step derives from this. */
+  --radius: 0.375rem;
+  --sidebar: var(--neutral-50);
+  --sidebar-foreground: var(--neutral-900);
+  --sidebar-primary: var(--purple-500);
+  --sidebar-primary-foreground: var(--neutral-0);
+  --sidebar-accent: var(--neutral-100);
+  --sidebar-accent-foreground: var(--neutral-900);
+  --sidebar-border: var(--neutral-200);
+  --sidebar-ring: var(--purple-500);
+}
+
+/* Dark = Yuvabe "brand-night" (deep indigo). Secondary; app runs light. */
+.dark {
+  --background: #140f2b;
+  --foreground: #f8f8fa;
+  --card: #1c1540;
+  --card-foreground: #f8f8fa;
+  --popover: #1c1540;
+  --popover-foreground: #f8f8fa;
+  --primary: #9d86f5;
+  --primary-foreground: #160f2e;
+  --secondary: #261b4d;
+  --secondary-foreground: #f8f8fa;
+  --muted: #261b4d;
+  --muted-foreground: #b3aed0;
+  --accent: #2c2058;
+  --accent-foreground: #f8f8fa;
+  --destructive: #f56b49;
+
+  /* --gen-ready/-failed/-running are deliberately NOT overridden here: the comp's
+     saturated hues are already the light end, and measure 8.9 / 4.2 / 12.1 on this
+     card. They inherit from :root. */
+
+  /* On the dark card (#1c1540) the 500s are the LIGHT end, so -text collapses back
+     onto them: green 8.41:1, yellow 11.16, cyan 7.07, destructive 5.75. The 700s
+     exist only for light surfaces and would go muddy here. */
+  --success: #90c645;
+  --success-foreground: #160f2e;
+  --success-text: #90c645;
+  --warning: #ffca2d;
+  --client: #ffca2d;
+  --client-text: #ffca2d;
+  --warning-foreground: #160f2e;
+  --warning-text: #ffca2d;
+  --info: #2bb7c7;
+  --info-foreground: #160f2e;
+  --info-text: #2bb7c7;
+  --destructive-foreground: #160f2e;
+  --destructive-text: #f56b49;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #9d86f5;
+  --chart-1: #9d86f5;
+  --chart-2: #ffca2d;
+  --chart-3: #9688c0;
+  --chart-4: #2bb7c7;
+  --chart-5: #90c645;
+  --sidebar: #1c1540;
+  --sidebar-foreground: #f8f8fa;
+  --sidebar-primary: #9d86f5;
+  --sidebar-primary-foreground: #160f2e;
+  --sidebar-accent: #2c2058;
+  --sidebar-accent-foreground: #f8f8fa;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #9d86f5;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-clash);
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--purple-500) 18%, white);
+  }
+}
+
+/* ─── Yuvabe utilities ──────────────────────────────────────────────── */
+
+/* Text on a scrim over imagery: the on-scrim colour with a soft shadow in the scrim's colour, so a
+   bright patch of the image under a letter never swallows it. */
+.scrim-text {
+  color: var(--on-scrim);
+  text-shadow: 0 1px 2px color-mix(in oklab, var(--scrim) 60%, transparent);
+}
+
+/* Eyebrow — widely-tracked small caps above headings (replaces mono labels) */
+.text-eyebrow {
+  font-family: var(--font-gilroy);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  /* Darkened here rather than at call sites. It was previously
+     --muted-foreground and got overridden to foreground/75 in LeftSection — but
+     two dozen eyebrows are hand-rolled rather than going through LeftSection, so
+     they never picked it up and read visibly lighter than their neighbours. */
+  color: color-mix(in oklab, var(--foreground) 75%, transparent);
+}
+
+/* Small eyebrow — a panel's own name in a dense tool screen (the editor's Sources, Inspector,
+   Timeline). Quieter than .text-eyebrow so the content's headings lead. */
+.text-eyebrow-sm {
+  font-family: var(--font-gilroy);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--muted-foreground);
+}
+
+/* Canvas surface — the signal grid, so the editor reads as a workspace */
+.canvas-surface {
+  background-color: var(--neutral-50);
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+.dark .canvas-surface {
+  background-color: #140f2b;
+  background-image:
+    linear-gradient(to right, rgba(150, 136, 192, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(150, 136, 192, 0.1) 1px, transparent 1px);
+}
+
+/* One tasteful entrance: staggered rise-in, brand easing (section reveal). */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise {
+    animation: none;
+  }
+}
+
+/* Shimmer — indeterminate progress bar for long-running operations */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+.animate-shimmer {
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer {
+    animation: none;
+  }
+}
+
+/* Thinking line — the copilot's "working" state, after Claude Code's: a cycling glyph, a verb,
+   a shimmer through the letters, and a seconds counter (copilot-thinking.tsx). Unlike the rest
+   of the system it is deliberately loud and brand-coloured: it is the one place the tool shows
+   it is busy. The text stops are the 700s, so every point of the sweep stays readable on the
+   pale fill (the 500s fall to 1.5–2.4:1 on white). The flows are linear: a looping gradient
+   eased per pass would visibly stall at each seam. */
+/* No outline: a faint brand wash behind the words, so the colour lives in the text itself. */
+.thinking-pill {
+  --thinking-ink-1: var(--purple-500);
+  --thinking-ink-2: var(--red-orange-700);
+  --thinking-ink-3: var(--yellow-700);
+  --thinking-ink-4: var(--cyan-700);
+  background: linear-gradient(
+    110deg,
+    color-mix(in oklab, var(--purple-500) 5%, transparent),
+    color-mix(in oklab, var(--yellow-500) 9%, transparent),
+    color-mix(in oklab, var(--cyan-500) 6%, transparent),
+    color-mix(in oklab, var(--purple-500) 5%, transparent)
+  );
+  background-size: 300% 100%;
+  animation: thinking-flow-pill 4s linear infinite reverse;
+}
+.dark .thinking-pill {
+  --thinking-ink-1: var(--lavender-200);
+  --thinking-ink-2: var(--red-orange-500);
+  --thinking-ink-3: var(--yellow-500);
+  --thinking-ink-4: var(--cyan-500);
+}
+/* A repeating gradient loops seamlessly only when it moves by exactly one tile: at a size of
+   N×100%, that is a position of 100%·N/(N−1) — 150% for the 300% pill, 200% for the 200% text.
+   Played in reverse, the colours travel left to right. */
+@keyframes thinking-flow-pill {
+  from { background-position: 0% 0; }
+  to   { background-position: 150% 0; }
+}
+@keyframes thinking-flow-text {
+  from { background-position: 0% 0; }
+  to   { background-position: 200% 0; }
+}
+
+/* The verb: the brand gradient travels across the letters, left to right, once every 2.4s. */
+.text-shimmer-brand {
+  background-image: linear-gradient(
+    90deg,
+    var(--thinking-ink-1),
+    var(--thinking-ink-2),
+    var(--thinking-ink-3),
+    var(--thinking-ink-4),
+    var(--thinking-ink-1)
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: thinking-flow-text 2.4s linear infinite reverse;
+}
+
+/* Each new verb rises in (house easing). */
+@keyframes thinking-verb-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.thinking-verb-in {
+  animation: thinking-verb-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thinking-pill,
+  .text-shimmer-brand,
+  .thinking-verb-in {
+    animation: none;
+  }
+}
+
+/* Thin, on-brand scrollbar — replaces the raw native scrollbar (arrow buttons, gray
+   track) on overflowing panels (Post editor's layer list / inspector) with a subtle
+   neutral thumb on a transparent track. Deliberately low-contrast: it should read as
+   "barely there," not as a new visual element. */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--neutral-300) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--neutral-300);
+  border-radius: 999px;
+}
+
+/* Marching-ant edges — flowing connection lines for the canvas loading state */
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+.animate-dash-flow {
+  animation: dash-flow 1.1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-dash-flow {
+    animation: none;
+  }
+}
+
+/* ─── Base UI modal pointer-blocker (D138) ──────────────────────────────
+   Every modal Base UI overlay portals an internal blocker div that swallows
+   pointer events on everything behind it. Base UI ships it with only
+   `position: fixed; inset: 0` and NO z-index, so it computes to auto (~0) —
+   below our z-50 Sheet/Dialog popups. A confirm dialog opened from inside a
+   Sheet therefore looked modal but left the Sheet's own fields fully
+   editable, because the one element meant to block them sat underneath them.
+
+   Matching z-50 rather than exceeding it is deliberate: the blocker is
+   portalled immediately BEFORE its own popup, and a nested overlay's portal
+   mounts after its parent's, so document order already resolves every tie in
+   the right direction — innermost blocker above the parent's content, each
+   popup above its own blocker. A higher value would instead put the blocker
+   over its own popup.
+
+   Styleable only from here: the element is rendered by Base UI's portal
+   internals, so no component of ours can reach it via props.
+
+   The role guard is load-bearing. `data-base-ui-inert` alone is too broad —
+   floating-ui's markOthers() stamps that same attribute onto the OUTSIDE
+   elements it marks inert (app containers, sibling portal roots), and giving
+   those a z-index would reshuffle stacking well outside this fix. Only the
+   blocker pairs the attribute with role="presentation". */
+[data-base-ui-inert][role="presentation"] {
+  z-index: 50;
+}
+
+/* ─── Sign-in page backdrop ──────────────────────────────────────────────────
+   The surface /login's card floats on — the page behind the card, not the card
+   itself. Built from the design system's own background vocabulary rather than a
+   new one: the same 72px signal lattice as `.canvas-surface`, plus the two brand
+   glows.
+
+   Both glows are deliberately near-threshold. Purple is the single brand colour
+   and is never a background fill, so it appears here only as a ~10% wash decaying
+   from one corner — enough to tint the page, not enough to read as "a purple
+   screen". Yellow is admitted for exactly one job in this system, a soft radial
+   glow, which is what it does here and nothing else.
+
+   The lattice is a step fainter than `.canvas-surface`'s. That grid sits behind a
+   working canvas where it earns its contrast by aiding alignment; this one is
+   pure atmosphere behind a floating card, so it only has to be felt. */
+.login-surface {
+  background-color: var(--neutral-25);
+  background-image:
+    radial-gradient(
+      58% 52% at 92% 4%,
+      color-mix(in oklab, var(--purple-500) 10%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      52% 48% at 4% 100%,
+      color-mix(in oklab, var(--yellow-500) 13%, transparent),
+      transparent 72%
+    ),
+    linear-gradient(to right, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    72px 72px,
+    72px 72px;
+}
+
+/* ── Camera-motion preview tiles (Video Prompt → Camera) ─────────────────────
+   A schematic 3D scene per camera move, ported from the Camera Motion 3D design
+   canvas: the camera rig animates while the subject holds still, so each tile
+   demonstrates its own move instead of decorating it with an unrelated photo.
+
+   Easing here deliberately departs from the system's cubic-bezier(0.22,1,0.36,1).
+   That curve is an ease-OUT; on an `alternate` loop it decelerates into both ends
+   and reads as a lurch. These are looping diagrams rather than UI transitions, so
+   they use a symmetric ease-in-out. Nothing else in the app uses --cam-ease. */
+:root {
+  --cam-ease: cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+@keyframes cam-push {
+  to { transform: translateZ(120px); }
+}
+@keyframes cam-pull {
+  to { transform: translateZ(-160px); }
+}
+@keyframes cam-orbit {
+  from { transform: rotateY(-35deg); }
+  to { transform: rotateY(35deg); }
+}
+@keyframes cam-pan {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(-12deg); }
+}
+@keyframes cam-tilt {
+  from { transform: rotateX(0deg); }
+  to { transform: rotateX(8deg); }
+}
+@keyframes cam-crane {
+  from { transform: translateY(2px) rotateX(2deg); }
+  to { transform: translateY(20px) rotateX(22deg); }
+}
+@keyframes cam-hand {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  16% { transform: translate3d(2px, -1.5px, 0) rotateZ(0.7deg); }
+  34% { transform: translate3d(-1.8px, 1px, 0) rotateZ(-0.6deg); }
+  52% { transform: translate3d(1.2px, 1.8px, 0) rotateZ(0.5deg); }
+  70% { transform: translate3d(-2.2px, -0.8px, 0) rotateZ(-0.8deg); }
+  86% { transform: translate3d(1px, -2px, 0) rotateZ(0.6deg); }
+}
+/* Seamless: one full grid cell per cycle, so the ground streams without a jump. */
+@keyframes cam-track {
+  to { background-position: 24px 0, 24px 0; }
+}
+@keyframes cam-blink {
+  0%, 55%, 100% { opacity: 1; }
+  70%, 85% { opacity: 0.1; }
+}
+
+/* Nine looping scenes on one screen is exactly the case this media query exists
+   for. The tiles still render — they just hold their first frame. */
+@media (prefers-reduced-motion: reduce) {
+  .cam-scene,
+  .cam-scene * {
+    animation: none !important;
+  }
+}
+
+/* Camera tiles hold their first frame until hovered or selected. The scene sets
+   animation-play-state:inherit on every animated node, so setting it once here
+   reaches the whole 3D set. */
+/* Raised action column in the focus views. Set as box-shadow directly rather
+   than through shadow-[var(--shadow-panel)]: Tailwind rewrites shadow utilities
+   to inject a colour, and that pass drops all but the first shadow in a
+   multi-value var — which left this casting to one side only. */
+.panel-raised {
+  box-shadow: var(--shadow-panel);
+}
+
+/* D387 — a collapsed Shot reads as a small stack of cards: two offset card edges behind it,
+   so there is visibly more inside. Plain CSS for the same reason as .panel-raised. */
+.shot-stacked {
+  box-shadow:
+    4px 4px 0 -1px var(--card),
+    4px 4px 0 0 var(--border),
+    8px 8px 0 -1px var(--card),
+    8px 8px 0 0 var(--border),
+    var(--shadow-card);
+}
+/* Unlayered, so it would hide Tailwind's ring: the selected stack draws its own. */
+.shot-stacked[data-selected="true"] {
+  box-shadow:
+    0 0 0 1px var(--background),
+    0 0 0 3px var(--primary),
+    4px 4px 0 -1px var(--card),
+    4px 4px 0 0 var(--border),
+    8px 8px 0 -1px var(--card),
+    8px 8px 0 0 var(--border),
+    var(--shadow-card);
+}
+
+.cam-tile {
+  animation-play-state: paused;
+}
+.cam-tile:hover,
+.cam-tile:focus-visible,
+.cam-tile[aria-pressed="true"] {
+  animation-play-state: running;
+}

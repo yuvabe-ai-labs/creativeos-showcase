@@ -1,0 +1,88 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# design-system reference — local only, not committed
+# (the fonts the app uses are vendored into src/fonts)
+/ref/
+
+# brainstorm visual-companion artifacts
+.superpowers/
+
+# trigger.dev local dev artifacts
+.trigger/
+
+# git worktrees
+/.worktrees/
+# Claude Code creates worktrees here — full repo checkouts, never committed.
+# Also keeps them out of the `trigger deploy` context archive, which packs the
+# workspace minus .gitignore + its own defaults (and would otherwise blow the 100MB limit).
+/.claude/worktrees/
+
+# office temp lock files
+~$*
+*.tmp
+
+# Raw help-clip masters. Recordings land in numbered folders (public/help-videos/1/…)
+# at ~3.4 Mbps; only the re-encoded, slug-named clips beside them are committed
+# (H.264 CRF 26, no audio — ~350KB vs ~5MB). Keep the masters somewhere durable
+# outside the repo: re-encoding from an already-compressed copy compounds the loss.
+/public/help-videos/[0-9]*/
+
+ref/omni-samples/
+
+# Design-canvas working files: the .dc.html artboards plus the seeded page they
+# are packed into. That seeded file carries the whole canvas editor inlined (~2MB),
+# so it must never land in a commit. The published canvas is the shareable copy;
+# these are the sources it is re-seeded from.
+.design/
+
+# Raw MR workbook exports — extract-mr-workbook.mjs distills these into seed/
+Copy of MR _ Content Creative OS.xlsx
+MR _ Content Creative OS/
+
+# Raw provider payloads dumped by scripts/spike-instagram.mjs — evidence, not source
+spike-*.json
+
+brag-output
+
+.agents
